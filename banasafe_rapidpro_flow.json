@@ -1,0 +1,396 @@
+{
+  "version": "13",
+  "flows": [
+    {
+      "name": "BanaSafe USSD Main Flow",
+      "uuid": "banasafe-main-flow-001",
+      "type": "messaging",
+      "language": "eng",
+      "nodes": [
+        {
+          "uuid": "node-lang-select",
+          "actions": [
+            {
+              "uuid": "action-lang-msg",
+              "type": "send_msg",
+              "text": "Welcome to BanaSafe\nTatô go BanaSafe\n\n1. English\n2. Setswana"
+            }
+          ],
+          "exits": [
+            {
+              "uuid": "exit-lang",
+              "destination_uuid": "node-lang-router"
+            }
+          ]
+        },
+        {
+          "uuid": "node-lang-router",
+          "router": {
+            "type": "switch",
+            "operand": "@input.text",
+            "cases": [
+              {
+                "uuid": "case-english",
+                "type": "has_any_word",
+                "arguments": ["1", "english"],
+                "exit_uuid": "exit-to-menu-en"
+              },
+              {
+                "uuid": "case-setswana",
+                "type": "has_any_word",
+                "arguments": ["2", "setswana"],
+                "exit_uuid": "exit-to-menu-st"
+              }
+            ],
+            "default_exit_uuid": "exit-lang-default"
+          },
+          "exits": [
+            { "uuid": "exit-to-menu-en", "destination_uuid": "node-menu-en" },
+            { "uuid": "exit-to-menu-st", "destination_uuid": "node-menu-st" },
+            { "uuid": "exit-lang-default", "destination_uuid": "node-lang-select" }
+          ]
+        },
+        {
+          "uuid": "node-menu-en",
+          "actions": [
+            {
+              "uuid": "action-menu-en",
+              "type": "send_msg",
+              "text": "BanaSafe — Safe Reporting\nYou are anonymous. We protect you.\n\n1. Report GBV incident\n2. Report child abuse\n3. Get help / resources\n4. Exit"
+            }
+          ],
+          "exits": [
+            { "uuid": "exit-menu-en", "destination_uuid": "node-menu-en-router" }
+          ]
+        },
+        {
+          "uuid": "node-menu-en-router",
+          "router": {
+            "type": "switch",
+            "operand": "@input.text",
+            "cases": [
+              {
+                "uuid": "case-gbv-en",
+                "type": "has_any_word",
+                "arguments": ["1"],
+                "exit_uuid": "exit-gbv-en"
+              },
+              {
+                "uuid": "case-child-en",
+                "type": "has_any_word",
+                "arguments": ["2"],
+                "exit_uuid": "exit-child-en"
+              },
+              {
+                "uuid": "case-resources-en",
+                "type": "has_any_word",
+                "arguments": ["3"],
+                "exit_uuid": "exit-resources-en"
+              },
+              {
+                "uuid": "case-exit-en",
+                "type": "has_any_word",
+                "arguments": ["4"],
+                "exit_uuid": "exit-end-en"
+              }
+            ],
+            "default_exit_uuid": "exit-menu-en-default"
+          },
+          "exits": [
+            { "uuid": "exit-gbv-en", "destination_uuid": "node-gbv-type-en" },
+            { "uuid": "exit-child-en", "destination_uuid": "node-child-type-en" },
+            { "uuid": "exit-resources-en", "destination_uuid": "node-resources-en" },
+            { "uuid": "exit-end-en", "destination_uuid": "node-exit-en" },
+            { "uuid": "exit-menu-en-default", "destination_uuid": "node-menu-en" }
+          ]
+        },
+        {
+          "uuid": "node-gbv-type-en",
+          "actions": [
+            {
+              "uuid": "action-gbv-type-en",
+              "type": "send_msg",
+              "text": "Report GBV Incident\nWhat type of incident?\n\n1. Physical violence\n2. Sexual violence\n3. Emotional/psychological abuse\n4. Economic abuse\n5. Back"
+            }
+          ],
+          "exits": [
+            { "uuid": "exit-gbv-type-en", "destination_uuid": "node-gbv-type-en-router" }
+          ]
+        },
+        {
+          "uuid": "node-gbv-type-en-router",
+          "router": {
+            "type": "switch",
+            "operand": "@input.text",
+            "cases": [
+              { "uuid": "case-gbv-physical", "type": "has_any_word", "arguments": ["1"], "exit_uuid": "exit-gbv-loc-en" },
+              { "uuid": "case-gbv-sexual", "type": "has_any_word", "arguments": ["2"], "exit_uuid": "exit-gbv-loc-en" },
+              { "uuid": "case-gbv-emotional", "type": "has_any_word", "arguments": ["3"], "exit_uuid": "exit-gbv-loc-en" },
+              { "uuid": "case-gbv-economic", "type": "has_any_word", "arguments": ["4"], "exit_uuid": "exit-gbv-loc-en" },
+              { "uuid": "case-gbv-back", "type": "has_any_word", "arguments": ["5"], "exit_uuid": "exit-back-to-menu-en" }
+            ],
+            "default_exit_uuid": "exit-gbv-type-default-en"
+          },
+          "exits": [
+            { "uuid": "exit-gbv-loc-en", "destination_uuid": "node-location-en" },
+            { "uuid": "exit-back-to-menu-en", "destination_uuid": "node-menu-en" },
+            { "uuid": "exit-gbv-type-default-en", "destination_uuid": "node-gbv-type-en" }
+          ]
+        },
+        {
+          "uuid": "node-location-en",
+          "actions": [
+            {
+              "uuid": "action-location-en",
+              "type": "send_msg",
+              "text": "Where did this happen?\n\n1. Home/Household\n2. School\n3. Workplace\n4. Public place\n5. Other"
+            }
+          ],
+          "exits": [
+            { "uuid": "exit-location-en", "destination_uuid": "node-victim-status-en" }
+          ]
+        },
+        {
+          "uuid": "node-victim-status-en",
+          "actions": [
+            {
+              "uuid": "action-victim-en",
+              "type": "send_msg",
+              "text": "Who needs help?\n\n1. I am the victim\n2. Reporting for someone else\n3. I am a witness"
+            }
+          ],
+          "exits": [
+            { "uuid": "exit-victim-en", "destination_uuid": "node-urgency-en" }
+          ]
+        },
+        {
+          "uuid": "node-urgency-en",
+          "actions": [
+            {
+              "uuid": "action-urgency-en",
+              "type": "send_msg",
+              "text": "Is this an emergency?\n\n1. Yes — danger right now\n2. No — incident already happened\n3. Not sure"
+            }
+          ],
+          "exits": [
+            { "uuid": "exit-urgency-en", "destination_uuid": "node-urgency-en-router" }
+          ]
+        },
+        {
+          "uuid": "node-urgency-en-router",
+          "router": {
+            "type": "switch",
+            "operand": "@input.text",
+            "cases": [
+              { "uuid": "case-emergency", "type": "has_any_word", "arguments": ["1"], "exit_uuid": "exit-to-confirm-en" },
+              { "uuid": "case-no-emergency", "type": "has_any_word", "arguments": ["2"], "exit_uuid": "exit-to-confirm-en" },
+              { "uuid": "case-not-sure", "type": "has_any_word", "arguments": ["3"], "exit_uuid": "exit-to-confirm-en" }
+            ],
+            "default_exit_uuid": "exit-urgency-default-en"
+          },
+          "exits": [
+            { "uuid": "exit-to-confirm-en", "destination_uuid": "node-confirm-en" },
+            { "uuid": "exit-urgency-default-en", "destination_uuid": "node-urgency-en" }
+          ]
+        },
+        {
+          "uuid": "node-confirm-en",
+          "actions": [
+            {
+              "uuid": "action-set-refid",
+              "type": "set_contact_field",
+              "field": { "key": "report_ref", "label": "Report Reference" },
+              "value": "@(text(rand() * 900000 + 100000))"
+            },
+            {
+              "uuid": "action-confirm-en",
+              "type": "send_msg",
+              "text": "Your report has been submitted.\nReference: @contact.report_ref\n\nYou are safe. Help is available:\n- Childline: 116\n- BONELA: 3953222\n- Police: 999\n\nThank you for speaking up."
+            }
+          ],
+          "exits": [
+            { "uuid": "exit-confirm-en", "destination_uuid": null }
+          ]
+        },
+        {
+          "uuid": "node-resources-en",
+          "actions": [
+            {
+              "uuid": "action-resources-en",
+              "type": "send_msg",
+              "text": "Help & Resources\n\n1. Childline: 116 (free, 24/7)\n2. BONELA: 3953222\n3. Police Emergency: 999\n4. Lifeline Botswana: 3911290\n5. Back to menu"
+            }
+          ],
+          "exits": [
+            { "uuid": "exit-resources-en-back", "destination_uuid": "node-menu-en" }
+          ]
+        },
+        {
+          "uuid": "node-exit-en",
+          "actions": [
+            {
+              "uuid": "action-exit-en",
+              "type": "send_msg",
+              "text": "Thank you for using BanaSafe. Stay safe."
+            }
+          ],
+          "exits": [
+            { "uuid": "exit-final-en", "destination_uuid": null }
+          ]
+        },
+        {
+          "uuid": "node-menu-st",
+          "actions": [
+            {
+              "uuid": "action-menu-st",
+              "type": "send_msg",
+              "text": "BanaSafe — Go Bika ka Ponego\nO sa itsege. Re a go sireletsa.\n\n1. Bika tiragalo ya GBV\n2. Bika go hujwa ga ngwana\n3. Bona thuso / metsotso\n4. Tswa"
+            }
+          ],
+          "exits": [
+            { "uuid": "exit-menu-st", "destination_uuid": "node-menu-st-router" }
+          ]
+        },
+        {
+          "uuid": "node-menu-st-router",
+          "router": {
+            "type": "switch",
+            "operand": "@input.text",
+            "cases": [
+              { "uuid": "case-gbv-st", "type": "has_any_word", "arguments": ["1"], "exit_uuid": "exit-gbv-st" },
+              { "uuid": "case-child-st", "type": "has_any_word", "arguments": ["2"], "exit_uuid": "exit-child-st" },
+              { "uuid": "case-resources-st", "type": "has_any_word", "arguments": ["3"], "exit_uuid": "exit-resources-st" },
+              { "uuid": "case-exit-st", "type": "has_any_word", "arguments": ["4"], "exit_uuid": "exit-end-st" }
+            ],
+            "default_exit_uuid": "exit-menu-st-default"
+          },
+          "exits": [
+            { "uuid": "exit-gbv-st", "destination_uuid": "node-gbv-type-st" },
+            { "uuid": "exit-child-st", "destination_uuid": "node-child-type-st" },
+            { "uuid": "exit-resources-st", "destination_uuid": "node-resources-st" },
+            { "uuid": "exit-end-st", "destination_uuid": "node-exit-st" },
+            { "uuid": "exit-menu-st-default", "destination_uuid": "node-menu-st" }
+          ]
+        },
+        {
+          "uuid": "node-gbv-type-st",
+          "actions": [
+            {
+              "uuid": "action-gbv-type-st",
+              "type": "send_msg",
+              "text": "Bika Tiragalo ya GBV\nKe mofuta ofe wa tiragalo?\n\n1. Tiragalo ya mmele\n2. Tiragalo ya thobalano\n3. Pitlagano ya maikutlo\n4. Pitlagano ya ikonomi\n5. Boela morago"
+            }
+          ],
+          "exits": [
+            { "uuid": "exit-gbv-type-st", "destination_uuid": "node-location-st" }
+          ]
+        },
+        {
+          "uuid": "node-location-st",
+          "actions": [
+            {
+              "uuid": "action-location-st",
+              "type": "send_msg",
+              "text": "Go diragaletse kwa kae?\n\n1. Gae/Lapeng\n2. Sekoleng\n3. Mafelong a tiro\n4. Lefelong la setšhaba\n5. Mafelo a mangwe"
+            }
+          ],
+          "exits": [
+            { "uuid": "exit-location-st", "destination_uuid": "node-victim-status-st" }
+          ]
+        },
+        {
+          "uuid": "node-victim-status-st",
+          "actions": [
+            {
+              "uuid": "action-victim-st",
+              "type": "send_msg",
+              "text": "Ke mang yo o tlhokang thuso?\n\n1. Ke nna molaodisiwa\n2. Ke bika mo go mongwe\n3. Ke kaedi"
+            }
+          ],
+          "exits": [
+            { "uuid": "exit-victim-st", "destination_uuid": "node-urgency-st" }
+          ]
+        },
+        {
+          "uuid": "node-urgency-st",
+          "actions": [
+            {
+              "uuid": "action-urgency-st",
+              "type": "send_msg",
+              "text": "A ke tshoganyetso?\n\n1. Ee — kotsi jaanong\n2. Nnyaa — tiragalo e setse e diragile\n3. Ga ke itse"
+            }
+          ],
+          "exits": [
+            { "uuid": "exit-urgency-st", "destination_uuid": "node-confirm-st" }
+          ]
+        },
+        {
+          "uuid": "node-confirm-st",
+          "actions": [
+            {
+              "uuid": "action-confirm-st",
+              "type": "send_msg",
+              "text": "Pegelo ya gago e romilwe.\nNomoro: @contact.report_ref\n\nO babalesegile. Thuso e teng:\n- Childline: 116\n- BONELA: 3953222\n- Mapodisi: 999\n\nKe a leboga go bua."
+            }
+          ],
+          "exits": [
+            { "uuid": "exit-confirm-st", "destination_uuid": null }
+          ]
+        },
+        {
+          "uuid": "node-child-type-en",
+          "actions": [
+            {
+              "uuid": "action-child-type-en",
+              "type": "send_msg",
+              "text": "Report Child Abuse\nWhat type of abuse?\n\n1. Physical abuse\n2. Sexual abuse\n3. Neglect\n4. Emotional abuse\n5. Child labour\n6. Back"
+            }
+          ],
+          "exits": [
+            { "uuid": "exit-child-type-en", "destination_uuid": "node-location-en" }
+          ]
+        },
+        {
+          "uuid": "node-child-type-st",
+          "actions": [
+            {
+              "uuid": "action-child-type-st",
+              "type": "send_msg",
+              "text": "Bika go Hujwa ga Ngwana\nKe mofuta ofe wa go hujwa?\n\n1. Go hujwa ga mmele\n2. Go hujwa ga thobalano\n3. Go solofelwa\n4. Go hujwa ga maikutlo\n5. Tiro ya bana\n6. Boela morago"
+            }
+          ],
+          "exits": [
+            { "uuid": "exit-child-type-st", "destination_uuid": "node-location-st" }
+          ]
+        },
+        {
+          "uuid": "node-resources-st",
+          "actions": [
+            {
+              "uuid": "action-resources-st",
+              "type": "send_msg",
+              "text": "Thuso le Metsotso\n\n1. Childline: 116 (mahala, 24/7)\n2. BONELA: 3953222\n3. Mapodisi: 999\n4. Lifeline Botswana: 3911290\n5. Boela menong"
+            }
+          ],
+          "exits": [
+            { "uuid": "exit-resources-st-back", "destination_uuid": "node-menu-st" }
+          ]
+        },
+        {
+          "uuid": "node-exit-st",
+          "actions": [
+            {
+              "uuid": "action-exit-st",
+              "type": "send_msg",
+              "text": "Ke a leboga go dirisa BanaSafe. Nna o babalesegile."
+            }
+          ],
+          "exits": [
+            { "uuid": "exit-final-st", "destination_uuid": null }
+          ]
+        }
+      ],
+      "entry_uuid": "node-lang-select"
+    }
+  ]
+}
