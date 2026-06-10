@@ -3,14 +3,7 @@
  * Node.js / Express webhook handler
  *
  * Deploy on: Render, Railway, Heroku, or any Node host
- * Africa's Talking sends USSD input → this server → RapidPro contact trigger
- */
-
-require("dotenv").config();
-const express = require("express");
-const axios = require("axios");
-
-const app = express();
+ * Africa's Tal
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
@@ -187,33 +180,4 @@ async function pushToRapidPro(session) {
 
   const payload = {
     flow: RAPIDPRO_FLOW_UUID,
-    urns: ["tel:anonymous"], // Anonymous — do not use real phone number
-    extra: {
-      ref_id: session.refId,
-      lang: session.lang,
-      report_type: session.reportType,
-      incident_type: session.incidentType,
-      location: session.location,
-      victim_status: session.victimStatus,
-      urgency: session.urgency,
-      timestamp: new Date().toISOString(),
-    },
-  };
-
-  await axios.post(`${RAPIDPRO_URL}/api/v2/flow_starts.json`, payload, {
-    headers: {
-      Authorization: `Token ${RAPIDPRO_TOKEN}`,
-      "Content-Type": "application/json",
-    },
-  });
-
-  console.log(`Report ${session.refId} pushed to RapidPro`);
-}
-
-// ─── UTILITY ───────────────────────────────────────────────────────────────────
-function generateRefId() {
-  return "BS-" + Math.floor(100000 + Math.random() * 900000);
-}
-
-// ─── START ─────────────────────────────────────────────────────────────────────
-app.listen(PORT, () => console.log(`BanaSafe USSD bridge running on port ${PORT}`));
+    urns: ["tel:anonymous"]
